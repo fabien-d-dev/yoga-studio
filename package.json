@@ -1,0 +1,21 @@
+{
+  "name": "yoga-studio",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@nuxt/icon": "^2.2.2",
+    "@nuxtjs/supabase": "^2.0.9",
+    "@videojs-player/vue": "^1.0.0",
+    "nuxt": "^4.4.6",
+    "video.js": "^7.21.7",
+    "vue": "^3.5.34",
+    "vue-router": "^5.0.7"
+  }
+}

@@ -1,0 +1,37 @@
+# Nuxt 3 & Nitro outputs (Fichiers générés au build et en dev)
+.nuxt/
+.nitro/
+.output/
+.data/
+.cache/
+dist/
+
+# Node dependencies (Le dossier le plus lourd, à ne jamais commit)
+node_modules/
+
+# Logs (Fichiers générés en cas de crash du serveur)
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Sécurité & Environnement (TRÈS IMPORTANT pour protéger tes clés Supabase)
+.env
+.env.*
+!.env.example
+
+# OS spécifiques (Fichiers systèmes inutiles)
+.DS_Store
+Thumbs.db
+
+# IDEs & Éditeurs (Fichiers de conf de ton éditeur)
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.fleet/
+note.txt
