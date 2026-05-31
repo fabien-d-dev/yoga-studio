@@ -1,24 +1,32 @@
 // nuxt.config.ts
 export default defineNuxtConfig({
-  // 1. Your active modules
+
+  compatibilityDate: '2026-05-28',
+
   modules: [
     '@nuxtjs/supabase',
     '@nuxt/icon'
   ],
 
-  // 2. Vite-specific configuration (to avoid page reloads)
+  runtimeConfig: {
+    public: {
+      appName: 'Fabu Yoga Studio'
+    }
+  },
+
   vite: {
     optimizeDeps: {
       include: [
         '@vue/devtools-core',
-        '@vue/devtools-kit'
+        '@vue/devtools-kit',
+        'snarkdown',
       ]
     }
   },
 
-  // 3. Your Supabase configuration (if you have chosen to disable types for now)
+
   supabase: {
     redirect: false,
-    types: false // Switch back to true once your database types are generated
+    types: false
   }
 })
