@@ -1,11 +1,25 @@
 <script setup>
 const { data: response } = await useFetch('/api/classes')
 
-const activeTag = ref('All')
-const tags = ['All', 'Mobilité', 'Strength', 'Post-Entraînement']
+const activeTag = ref('Tous')
+const tags = ['Tous', 'Force', 'Post-Entraînement', 'Réalignement']
 
-const showMyofascialFilter = ref(false)
-const selectedMyofascialLine = ref('All')
+const activeSecondaryFilter = ref(null)
+const selectedMethod = ref('Tous')
+const selectedMyofascialLine = ref('Tous')
+
+const availableMethods = computed(() => {
+	const classesList = response.value?.data || []
+	const methodsSet = new Set()
+
+	classesList.forEach(yogaClass => {
+		if (yogaClass.method && yogaClass.method.trim()) {
+			methodsSet.add(yogaClass.method.trim())
+		}
+	})
+
+	return ['Tous', ...Array.from(methodsSet)]
+})
 
 const availableMyofascialLines = computed(() => {
 	const classesList = response.value?.data || []
@@ -23,17 +37,21 @@ const availableMyofascialLines = computed(() => {
 		}
 	})
 
-	return ['All', ...Array.from(linesSet)]
+	return ['Tous', ...Array.from(linesSet)]
 })
 
 const filteredClasses = computed(() => {
 	let classesList = response.value?.data || []
 
-	if (activeTag.value !== 'All') {
+	if (activeTag.value !== 'Tous') {
 		classesList = classesList.filter(yogaClass => yogaClass.tag === activeTag.value)
 	}
 
-	if (selectedMyofascialLine.value !== 'All') {
+	if (selectedMethod.value !== 'Tous') {
+		classesList = classesList.filter(yogaClass => yogaClass.method === selectedMethod.value)
+	}
+
+	if (selectedMyofascialLine.value !== 'Tous') {
 		classesList = classesList.filter(yogaClass => {
 			if (!yogaClass.myofascial_lines) return false
 
@@ -49,12 +67,12 @@ const filteredClasses = computed(() => {
 	return classesList
 })
 
-const toggleMyofascialFilter = () => {
-	showMyofascialFilter.value = !showMyofascialFilter.value
-}
-
-const selectMyofascialLine = (line) => {
-	selectedMyofascialLine.value = line
+const toggleSecondaryFilter = (filterType) => {
+	if (activeSecondaryFilter.value === filterType) {
+		activeSecondaryFilter.value = null
+	} else {
+		activeSecondaryFilter.value = filterType
+	}
 }
 </script>
 
@@ -67,9 +85,8 @@ const selectMyofascialLine = (line) => {
 					<BackButton to="/" text="Retour" />
 					<h1 class="page-title">Classes En Ligne</h1>
 					<p class="intro-text">
-						Une série de pratiques immersives conçues pour développer la force, la flexibilité et la maîtrise de
-						l'esprit.
-						Choisissez votre séquence et commencez votre voyage.
+						Des séries immersives conçues pour développer la force, la mobilité active et l'équilibre structurel.
+						Choisir la séquence adaptée aux objectifs du jour et maximiser le potentiel physique.
 					</p>
 				</div>
 
@@ -82,19 +99,41 @@ const selectMyofascialLine = (line) => {
 						</button>
 					</nav>
 
-					<button class="secondary-filter-btn"
-						:class="{ 'btn-active': showMyofascialFilter || selectedMyofascialLine !== 'All' }"
-						@click="toggleMyofascialFilter">
-						<span>Lignes Myofasciales</span>
-						<span v-if="selectedMyofascialLine !== 'All'" class="active-dot"></span>
-					</button>
+					<div class="secondary-buttons-group">
+						<button class="secondary-filter-btn"
+							:class="{ 'btn-active': activeSecondaryFilter === 'method' || selectedMethod !== 'Tous' }"
+							@click="toggleSecondaryFilter('method')">
+							<span>Méthodes</span>
+							<span v-if="selectedMethod !== 'Tous'" class="active-dot"></span>
+						</button>
+
+						<button class="secondary-filter-btn"
+							:class="{ 'btn-active': activeSecondaryFilter === 'myofascial' || selectedMyofascialLine !== 'Tous' }"
+							@click="toggleSecondaryFilter('myofascial')">
+							<span>Lignes Myofasciales</span>
+							<span v-if="selectedMyofascialLine !== 'Tous'" class="active-dot"></span>
+						</button>
+					</div>
 				</div>
 
-				<div v-if="showMyofascialFilter" class="myofascial-filter-drawer">
-					<button v-for="line in availableMyofascialLines" :key="line" class="myofascial-filter-pill"
-						:class="{ active: selectedMyofascialLine === line }" @click="selectMyofascialLine(line)">
-						{{ line }}
-					</button>
+				<div class="drawers-container">
+					<transition name="drawer-fade">
+						<div v-if="activeSecondaryFilter === 'method'" class="filter-drawer">
+							<button v-for="method in availableMethods" :key="method" class="filter-pill"
+								:class="{ active: selectedMethod === method }" @click="selectedMethod = method">
+								{{ method }}
+							</button>
+						</div>
+					</transition>
+
+					<transition name="drawer-fade">
+						<div v-if="activeSecondaryFilter === 'myofascial'" class="filter-drawer">
+							<button v-for="line in availableMyofascialLines" :key="line" class="filter-pill"
+								:class="{ active: selectedMyofascialLine === line }" @click="selectedMyofascialLine = line">
+								{{ line }}
+							</button>
+						</div>
+					</transition>
 				</div>
 			</header>
 
@@ -102,7 +141,6 @@ const selectMyofascialLine = (line) => {
 				<NuxtLink v-for="yogaClass in filteredClasses" :key="yogaClass.id" :to="`/classes/${yogaClass.slug}`"
 					class="class-card-link">
 					<article class="class-card">
-
 						<div class="image-container">
 							<img :src="yogaClass.image" :alt="yogaClass.title" loading="lazy" />
 							<div class="subtle-overlay"></div>
@@ -116,7 +154,7 @@ const selectMyofascialLine = (line) => {
 								<span class="class-level">{{ yogaClass.level }}</span>
 							</div>
 							<h3 class="class-title">{{ yogaClass.title }}</h3>
-							<!-- <p class="class-collection">{{ yogaClass.collection }}</p> -->
+							<p class="class-collection">Méthode: {{ yogaClass.method || 'Non spécifiée' }}</p>
 
 							<div class="myofascial-container" v-if="yogaClass.myofascial_lines">
 								<template v-if="Array.isArray(yogaClass.myofascial_lines)">
@@ -133,7 +171,6 @@ const selectMyofascialLine = (line) => {
 								</template>
 							</div>
 						</div>
-
 					</article>
 				</NuxtLink>
 			</div>
@@ -167,7 +204,7 @@ const selectMyofascialLine = (line) => {
 	display: flex;
 	flex-direction: column;
 	gap: 40px;
-	margin-bottom: 60px;
+	margin-bottom: 40px;
 	border-bottom: 1px solid rgba(255, 255, 255, 0.03);
 	padding-bottom: 30px;
 }
@@ -250,6 +287,11 @@ const selectMyofascialLine = (line) => {
 	width: 100%;
 }
 
+.secondary-buttons-group {
+	display: flex;
+	gap: 12px;
+}
+
 .secondary-filter-btn {
 	background: transparent;
 	border: 1px solid rgba(255, 255, 255, 0.15);
@@ -276,6 +318,7 @@ const selectMyofascialLine = (line) => {
 .secondary-filter-btn.btn-active {
 	border-color: #ecda71;
 	background-color: rgba(197, 168, 128, 0.05);
+	color: #ecda71;
 }
 
 .active-dot {
@@ -285,7 +328,14 @@ const selectMyofascialLine = (line) => {
 	border-radius: 50%;
 }
 
-.myofascial-filter-drawer {
+.drawers-container {
+	position: relative;
+	display: grid;
+	grid-template-columns: 1fr;
+}
+
+.filter-drawer {
+	grid-area: 1 / 1 / 2 / 2;
 	display: flex;
 	flex-wrap: wrap;
 	gap: 10px;
@@ -293,10 +343,10 @@ const selectMyofascialLine = (line) => {
 	background-color: #16191d;
 	border-radius: 6px;
 	border: 1px solid rgba(255, 255, 255, 0.03);
-	animation: fadeIn 0.2s ease-out;
+	z-index: 1;
 }
 
-.myofascial-filter-pill {
+.filter-pill {
 	background: transparent;
 	border: 1px solid rgba(255, 255, 255, 0.1);
 	color: #aaaaaa;
@@ -309,12 +359,12 @@ const selectMyofascialLine = (line) => {
 	transition: all 0.2s ease;
 }
 
-.myofascial-filter-pill:hover {
+.filter-pill:hover {
 	color: #ffffff;
 	border-color: rgba(255, 255, 255, 0.3);
 }
 
-.myofascial-filter-pill.active {
+.filter-pill.active {
 	background-color: #ecda71;
 	border-color: #ecda71;
 	color: #090a0c;
@@ -474,16 +524,15 @@ const selectMyofascialLine = (line) => {
 	font-style: italic;
 }
 
-@keyframes fadeIn {
-	from {
-		opacity: 0;
-		transform: translateY(-5px);
-	}
+.drawer-fade-enter-active,
+.drawer-fade-leave-active {
+	transition: all 0.25s ease-out;
+}
 
-	to {
-		opacity: 1;
-		transform: translateY(0);
-	}
+.drawer-fade-enter-from,
+.drawer-fade-leave-to {
+	opacity: 0;
+	transform: translateY(-8px);
 }
 
 @media (max-width: 1024px) {
@@ -519,6 +568,11 @@ const selectMyofascialLine = (line) => {
 	.filter-navigation {
 		gap: 20px;
 		width: 100%;
+	}
+
+	.secondary-buttons-group {
+		width: 100%;
+		flex-direction: column;
 	}
 
 	.secondary-filter-btn {
