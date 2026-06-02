@@ -27,7 +27,7 @@ defineProps({
 
 .back-link {
   display: inline-block;
-  color: #f3dd62;
+  color: #ecda71;
   text-decoration: none;
   font-size: 0.85rem;
   letter-spacing: 1px;
