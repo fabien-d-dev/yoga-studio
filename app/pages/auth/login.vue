@@ -21,7 +21,7 @@ const handleLogin = async () => {
   loading.value = false
 
   if (!error) {
-    navigateTo('/account')
+    navigateTo('/classes')
   } else {
     errorMessage.value = "Identifiants incorrects ou introuvables."
   }
@@ -300,7 +300,7 @@ const handleLogin = async () => {
 }
 
 .footer-link:hover {
-  color: #c5a880;
+  color: #ecda71;
 }
 
 .image-section {
