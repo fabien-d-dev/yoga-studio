@@ -33,7 +33,7 @@ const { data: response } = await useFetch('/api/faq')
 }
 
 .back-link {
-  color: #c5a880;
+  color: #ecda71;
   text-decoration: none;
   text-transform: uppercase;
   font-size: 0.9rem;
@@ -47,7 +47,7 @@ const { data: response } = await useFetch('/api/faq')
 }
 
 .category-tag {
-  color: #c5a880;
+  color: #ecda71;
   text-transform: uppercase;
   font-size: 0.8rem;
   letter-spacing: 3px;
@@ -79,7 +79,7 @@ const { data: response } = await useFetch('/api/faq')
 
 .faq-link-item:hover {
   padding-left: 10px;
-  color: #c5a880;
+  color: #ecda71;
 }
 
 .faq-question-title {
@@ -88,6 +88,6 @@ const { data: response } = await useFetch('/api/faq')
 }
 
 .arrow {
-  color: #c5a880;
+  color: #ecda71;
 }
 </style>

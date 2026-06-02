@@ -44,7 +44,7 @@ const htmlAnswer = computed(() => {
 }
 
 .back-link {
-  color: #c5a880;
+  color: #ecda71;
   text-decoration: none;
   text-transform: uppercase;
   font-size: 0.9rem;
@@ -54,11 +54,11 @@ const htmlAnswer = computed(() => {
 .container {
   max-width: 800px;
   margin: 0 auto;
-  padding: 60px 20px;
+  padding: 40px 20px;
 }
 
 .article-category {
-  color: #c5a880;
+  color: #ecda71;
   text-transform: uppercase;
   font-size: 0.8rem;
   letter-spacing: 3px;
@@ -77,7 +77,7 @@ const htmlAnswer = computed(() => {
 .divider {
   width: 40px;
   height: 1px;
-  background-color: #c5a880;
+  background-color: #ecda71;
   margin-bottom: 40px;
 }
 
@@ -104,7 +104,7 @@ const htmlAnswer = computed(() => {
 }
 
 .article-content :deep(strong) {
-  color: #c5a880;
+  color: #ecda71;
   font-weight: 400;
 }
 
