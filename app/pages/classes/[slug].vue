@@ -24,10 +24,42 @@ const currentClass = computed(() => {
         </div>
       </div>
 
-      <div class="info-section">
-        <span class="collection-tag">{{ currentClass.collection }} • {{ currentClass.level }}</span>
+    <div class="info-section">
+        <div class="meta-header">
+          <span class="category-badge">{{ currentClass.tag }}</span>
+          <p class="video-duration">{{ currentClass.duration }}</p>
+        </div>
+
         <h1 class="video-title">{{ currentClass.title }}</h1>
-        <p class="video-duration">Durée de la séance : {{ currentClass.duration }}</p>
+
+        <div class="specs-grid">
+          <div class="spec-item">
+            <span class="spec-label">Niveau</span>
+            <span class="spec-value">{{ currentClass.level }}</span>
+          </div>
+
+          <div class="spec-item">
+            <span class="spec-label">Méthode</span>
+            <span class="spec-value">{{ currentClass.method || 'Non spécifiée' }}</span>
+          </div>
+
+          <div class="spec-item full-width" v-if="currentClass.myofascial_lines">
+            <span class="spec-label">Lignes Myofasciales</span>
+            <div class="myofascial-tags">
+              <template v-if="Array.isArray(currentClass.myofascial_lines)">
+                <span v-for="line in currentClass.myofascial_lines" :key="line" class="myofascial-tag">
+                  {{ line }}
+                </span>
+              </template>
+              <template
+                v-else-if="typeof currentClass.myofascial_lines === 'string' && currentClass.myofascial_lines.trim()">
+                <span v-for="line in currentClass.myofascial_lines.split(',')" :key="line" class="myofascial-tag">
+                  {{ line.trim() }}
+                </span>
+              </template>
+            </div>
+          </div>
+        </div>
 
         <div class="divider"></div>
 
@@ -54,7 +86,7 @@ const currentClass = computed(() => {
 }
 
 .back-link {
-  color: #c5a880;
+  color: #ecda71;
   text-decoration: none;
   font-size: 0.9rem;
   letter-spacing: 1px;
@@ -72,7 +104,6 @@ const currentClass = computed(() => {
   padding: 20px 20px 60px 20px;
 }
 
-/* Style du lecteur vidéo */
 .video-wrapper {
   position: relative;
   width: 100%;
@@ -99,47 +130,121 @@ video::-webkit-media-controls-panel {
 
 .info-section {
   margin-top: 40px;
-  max-width: 800px;
+  width: 100%;
 }
 
-.collection-tag {
-  color: #c5a880;
+.meta-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.category-badge {
+  color: #ecda71;
+  font-size: 0.75rem;
   text-transform: uppercase;
-  font-size: 0.85rem;
   letter-spacing: 2px;
+  background: rgba(236, 218, 113, 0.08);
+  border: 1px solid rgba(236, 218, 113, 0.2);
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+
+.video-duration {
+  font-size: 0.85rem;
+  color: #c1c1c1;
 }
 
 .video-title {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 2.8rem;
+  font-size: 3rem;
   font-weight: 300;
-  margin: 10px 0 5px 0;
-  letter-spacing: 1px;
+  margin: 0 0 30px 0;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
 }
 
-.video-duration {
-  font-size: 0.9rem;
-  color: #777777;
-  margin: 0 0 25px 0;
+.specs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  background-color: #121418;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  padding: 20px;
+  border-radius: 6px;
+  margin-bottom: 30px;
+}
+
+.spec-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.spec-item.full-width {
+  grid-column: span 2;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  padding-top: 15px;
+  margin-top: 5px;
+}
+
+.spec-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: #555555;
+  letter-spacing: 1.5px;
+}
+
+.spec-value {
+  font-size: 0.95rem;
+  color: #dddddd;
+  font-weight: 300;
+}
+
+.myofascial-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.myofascial-tag {
+  font-size: 0.75rem;
+  font-weight: 300;
+  color: #ecda71;
+  background-color: rgba(236, 218, 113, 0.05);
+  border: 1px solid rgba(236, 218, 113, 0.15);
+  padding: 4px 10px;
+  border-radius: 4px;
 }
 
 .divider {
-  width: 50px;
+  width: 40px;
   height: 1px;
-  background-color: #c5a880;
-  margin-bottom: 25px;
+  background-color: rgba(201, 186, 93, 0.746);
+  margin-bottom: 30px;
 }
 
 .video-description {
   font-size: 1.05rem;
   line-height: 1.8;
-  color: #cccccc;
+  color: #b3b3b3;
   font-weight: 200;
 }
 
 @media (max-width: 600px) {
   .video-title {
-    font-size: 2rem;
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+  }
+
+  .specs-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .spec-item.full-width {
+    grid-column: span 1;
   }
 }
 </style>
