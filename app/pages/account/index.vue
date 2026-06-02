@@ -506,7 +506,7 @@ const handleLogout = async () => {
 
 .badge-icon {
   font-size: 0.9rem;
-  color: #c5a880;
+  color: #ecda71;
 }
 
 .input-group {
