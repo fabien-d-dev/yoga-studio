@@ -85,7 +85,7 @@ const nameOfApp = config.public.appName
   letter-spacing: 4px;
   font-size: 0.85rem;
   font-weight: 200;
-  color: #c5a880;
+  color: #ecda71;
 }
 
 .brand-title {
@@ -99,7 +99,7 @@ const nameOfApp = config.public.appName
 .divider {
   width: 60px;
   height: 1px;
-  background-color: #c5a880;
+  background-color: #ecda71;
   margin: 20px auto;
 }
 
