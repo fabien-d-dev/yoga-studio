@@ -315,7 +315,7 @@ width: 100%;
 }
 
 .footer-link.highlight:hover {
-  color: #c5a880;
+  color: #ecda71;
 }
 
 
